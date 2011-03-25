@@ -1,0 +1,115 @@
+package com.hangout;
+
+import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
+import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
+
+import org.apache.http.client.methods.HttpRequestBase;
+
+import android.app.Application;
+
+import com.hangout.api.MeetupApi;
+import com.hangout.api.Member;
+import com.hangout.service.GroupDao;
+import com.hangout.service.MemberDao;
+
+public class HangoutApplication extends Application {
+
+	private static CommonsHttpOAuthProvider provider;
+
+	private static CommonsHttpOAuthConsumer consumer;
+
+	private Storage storage;
+	
+	private DatabaseHelper helper;
+
+	private MeetupApi api;
+	
+	private Member member;
+	
+	private MemberDao memberDao;
+	
+	private GroupDao groupDao;
+
+	@Override
+	public void onCreate() {
+		super.onCreate();
+
+		storage = new Storage(this);		
+		String request = getString(R.string.meetup_request);
+		String access = getString(R.string.meetup_access);
+		String authorize = getString(R.string.meetup_authorize);
+		String key = getString(R.string.meetup_key);
+		String secret = getString(R.string.meetup_secret);
+		if (provider == null) {
+			provider = new CommonsHttpOAuthProvider(request, access, authorize);
+		}
+		if (consumer == null) {
+			consumer = new CommonsHttpOAuthConsumer(key, secret);
+			consumer.setTokenWithSecret(storage.getMeetupToken(), storage
+					.getMeetupTokenSecret());
+		}
+		api = new MeetupApi() {
+
+			@Override
+			protected <T extends HttpRequestBase> T sign(T method) {
+				try {
+					consumer.sign(method);
+				}catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+				return method;
+			}
+			
+		};
+	}
+
+	public CommonsHttpOAuthProvider getProvider() {
+		return provider;
+	}
+
+	
+	
+	public Storage getStorage() {
+		return storage;
+	}
+
+	public CommonsHttpOAuthConsumer getConsumer() {
+		return consumer;
+	}
+
+	public MeetupApi getApi() {
+		return api;
+	}
+
+	public void setApi(MeetupApi api) {
+		this.api = api;
+	}
+
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+		if(helper!=null) {
+			helper.close();
+		} 
+		helper = new DatabaseHelper(this, member.getId());
+		if(memberDao==null) {
+			memberDao = new MemberDao();
+		}
+		if(groupDao==null) {
+			groupDao = new GroupDao();
+		}
+		memberDao.setHelper(helper);
+		groupDao.setHelper(helper);
+	}
+
+	public MemberDao getMemberDao() {
+		return memberDao;
+	}
+
+	public GroupDao getGroupDao() {
+		return groupDao;
+	}
+}

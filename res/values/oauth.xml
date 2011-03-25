@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="meetup_key">5itpifckj0vtgqj345tsok6t13</string>
+    <string name="meetup_secret">oj92menbul6mvphei58ec7sjg8</string>
+    <string name="meetup_request">https://api.meetup.com/oauth/request/</string>
+    <string name="meetup_authorize">http://www.meetup.com/authorize/</string>
+    <string name="meetup_access">"https://api.meetup.com/oauth/access/</string>
+    <string name="meetup_callback">hangout:///</string>
+    <string name="scheme">hangout</string>
+</resources>

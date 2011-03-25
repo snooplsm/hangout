@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="need_to_authenticate">Need to authenticate you with meetup...</string>
+    <string name="logging_in">Logging in...</string>
+</resources>
