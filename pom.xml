@@ -4,15 +4,14 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.teachscape</groupId>
+	<groupId>com.happytap</groupId>
 	<artifactId>${artifactId}</artifactId>
 	<version>${dct.version}</version>
 	<packaging>apk</packaging>
-	<name>Snapup</name>
+	<name>Hangout</name>
 	<url>http://maven.apache.org</url>
 	<properties>
-		<artifactId>dct-android</artifactId>
-		<dct.version>1.0-SNAP</dct.version>
+		<artifactId>hangout</artifactId>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<android.version>2.1</android.version>
 		<android.platform>7</android.platform>
@@ -104,7 +103,6 @@
 							<includes>
 								<include>target/*.apk</include>
 							</includes>
-							<keystore>teachscape-android.keystore</keystore>
 							<storepass>${storepass}</storepass>
 							<keypass>${keypass}</keypass>
 							<alias>android</alias>
