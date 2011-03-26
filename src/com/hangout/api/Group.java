@@ -19,7 +19,7 @@ public class Group extends EventGroup implements Serializable {
 	private String description;
 
 	@JsonProperty("group_photo_count")
-	private int groupPhotoCount;
+	private Integer groupPhotoCount;
 
 	@JsonProperty("group_urlname")
 	private String groupUrlName;
@@ -27,25 +27,25 @@ public class Group extends EventGroup implements Serializable {
 	private long id;
 
 	@JsonProperty("join_mode")
-	private Integer joinMode;
+	private String joinMode;
 	
 	private double lat,lon;
 	
 	private String link;
 	
-	private int members;
+	private Integer members;
 
 	private String name;
 
 	@JsonProperty("organizer_id")
-	private long organizerId;
+	private Long organizerId;
 
 	@JsonProperty("organizer_name")
 	private String organizerName;
 
 	private String organizerProfileURL;
 	
-	private double rating;
+	private Double rating;
 	
 	@JsonProperty("short_link")
 	private String shortLink;
@@ -93,7 +93,7 @@ public class Group extends EventGroup implements Serializable {
 		return description;
 	}
 
-	public int getGroupPhotoCount() {
+	public Integer getGroupPhotoCount() {
 		return groupPhotoCount;
 	}
 	
@@ -105,7 +105,7 @@ public class Group extends EventGroup implements Serializable {
 		return id;
 	}
 
-	public Integer getJoinMode() {
+	public String getJoinMode() {
 		return joinMode;
 	}
 
@@ -121,7 +121,7 @@ public class Group extends EventGroup implements Serializable {
 		return lon;
 	}
 
-	public int getMembers() {
+	public Integer getMembers() {
 		return members;
 	}
 
@@ -129,7 +129,7 @@ public class Group extends EventGroup implements Serializable {
 		return name;
 	}
 
-	public long getOrganizerId() {
+	public Long getOrganizerId() {
 		return organizerId;
 	}
 
@@ -141,7 +141,7 @@ public class Group extends EventGroup implements Serializable {
 		return organizerProfileURL;
 	}
 
-	public double getRating() {
+	public Double getRating() {
 		return rating;
 	}
 
@@ -201,7 +201,7 @@ public class Group extends EventGroup implements Serializable {
 		this.description = description;
 	}
 
-	public void setGroupPhotoCount(int groupPhotoCount) {
+	public void setGroupPhotoCount(Integer groupPhotoCount) {
 		this.groupPhotoCount = groupPhotoCount;
 	}
 
@@ -213,7 +213,7 @@ public class Group extends EventGroup implements Serializable {
 		this.id = id;
 	}
 
-	public void setJoinMode(int joinMode) {
+	public void setJoinMode(String joinMode) {
 		this.joinMode = joinMode;
 	}
 
@@ -229,7 +229,7 @@ public class Group extends EventGroup implements Serializable {
 		this.lon = lon;
 	}
 
-	public void setMembers(int members) {
+	public void setMembers(Integer members) {
 		this.members = members;
 	}
 
@@ -237,7 +237,7 @@ public class Group extends EventGroup implements Serializable {
 		this.name = name;
 	}
 
-	public void setOrganizerId(long organizerId) {
+	public void setOrganizerId(Long organizerId) {
 		this.organizerId = organizerId;
 	}
 
@@ -249,7 +249,7 @@ public class Group extends EventGroup implements Serializable {
 		this.organizerProfileURL = organizerProfileURL;
 	}
 
-	public void setRating(double rating) {
+	public void setRating(Double rating) {
 		this.rating = rating;
 	}
 

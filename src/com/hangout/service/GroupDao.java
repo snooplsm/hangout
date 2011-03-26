@@ -17,29 +17,50 @@ public class GroupDao extends Dao {
 	private static final String TABLE = "mgroup";
 	
 	private Parser<Group> groupParser = new Parser<Group>() {
-
+		
 		@Override
 		public ContentValues args(Group t) {
 			ContentValues c = new ContentValues(19);
 			c.put("id", t.getId());
-			c.put("description", t.getDescription());
-			c.put("group_photo_count", t.getGroupPhotoCount());
 			c.put("group_urlname", t.getGroupUrlName());
+			c.put("name",t.getName());
 			c.put("join_mode", t.getJoinMode());
 			c.put("lat", t.getLat());
 			c.put("lon", t.getLon());
-			c.put("members", t.getMembers());
-			c.put("name",t.getName());
-			c.put("organizer_id", t.getOrganizerId());
-			c.put("organizer_name", t.getOrganizerName());
-			c.put("rating", t.getRating());
-			c.put("short_link",t.getShortLink());
-			c.put("city", t.getCity());
-			c.put("state", t.getState());
-			c.put("country", t.getCountry());
-			c.put("zip", t.getZip());
-			c.put("visibility", t.getVisibility());
-			c.put("who", t.getWho());
+		
+			if(t.getDescription()!=null) {
+				c.put("description", t.getDescription());
+			}
+			if(t.getGroupPhotoCount()!=null) {
+				c.put("group_photo_count", t.getGroupPhotoCount());
+			}
+			if(t.getMembers()!=null) {
+				c.put("members", t.getMembers());
+			}
+			
+			if(t.getOrganizerId()!=null) {
+				c.put("organizer_id", t.getOrganizerId());
+				c.put("organizer_name", t.getOrganizerName());
+			}
+				
+			if(t.getRating()!=null) {
+				c.put("rating", t.getRating());
+			}
+			if(t.getShortLink()!=null) {
+				c.put("short_link",t.getShortLink());
+			}
+			if(t.getCity()!=null) {
+				c.put("city", t.getCity());
+				c.put("state", t.getState());
+				c.put("country", t.getCountry());
+				c.put("zip", t.getZip());
+			}
+			if(t.getVisibility()!=null) {
+				c.put("visibility", t.getVisibility());
+			}
+			if(t.getWho()!=null) {
+				c.put("who", t.getWho());
+			}
 			return c;
 		}
 
@@ -50,7 +71,7 @@ public class GroupDao extends Dao {
 			group.setDescription(cursor.getString(1));
 			group.setGroupPhotoCount(cursor.getInt(2));
 			group.setGroupUrlName(cursor.getString(3));
-			group.setJoinMode(cursor.getInt(4));
+			group.setJoinMode(cursor.getString(4));
 			group.setLat(cursor.getDouble(5));
 			group.setLon(cursor.getDouble(6));
 			group.setMembers(cursor.getInt(7));

@@ -12,6 +12,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 
+import com.hangout.api.Events;
 import com.hangout.api.Groups;
 import com.hangout.api.Member;
 import com.hangout.service.ApiService;
@@ -82,6 +83,9 @@ public class HangoutActivity extends Activity {
 			case ApiService.MSG_API_RECEIVED_GROUPS:
 				onGetGroups((Groups)msg.obj);
 				break;
+			case ApiService.MSG_API_RECEIVED_EVENTS:
+				onGetEvents((Events)msg.obj);
+				break;
 			default:
 				HangoutActivity.this.handleMessage(msg);
 			}
@@ -98,15 +102,22 @@ public class HangoutActivity extends Activity {
 		getHangoutApplication().getStorage().setMeetupCurrentMemberId(member.getId());
 		getHangoutApplication().getMemberDao().save(member);
 		Message message = Message.obtain(null,ApiService.MSG_API_GET_GROUPS, member.getId());
+		Message messageEvents = Message.obtain(null, ApiService.MSG_API_GET_EVENTS, member.getId());
 		try {
 			mService.send(message);
+			mService.send(messageEvents);
 		} catch (RemoteException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
+	private void onGetEvents(Events events) {
+		getHangoutApplication().getEventDao().save(events);
+	}
+	
 	private void onGetGroups(Groups groups) {
 		getHangoutApplication().getGroupDao().save(groups);		
+		
 	}
 	
 	protected HangoutApplication getHangoutApplication() {

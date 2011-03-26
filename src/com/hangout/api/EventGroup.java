@@ -10,7 +10,7 @@ public class EventGroup implements Serializable {
 	
 	private long id;
 	@JsonProperty("join_mode")
-	private Integer joinMode;
+	private String joinMode;
 	@JsonProperty("group_lat")
 	private double lat;
 	@JsonProperty("group_lon")
@@ -22,10 +22,10 @@ public class EventGroup implements Serializable {
 	public void setId(long id) {
 		this.id = id;
 	}
-	public Integer getJoinMode() {
+	public String getJoinMode() {
 		return joinMode;
 	}
-	public void setJoinMode(Integer joinMode) {
+	public void setJoinMode(String joinMode) {
 		this.joinMode = joinMode;
 	}
 	public double getLat() {
