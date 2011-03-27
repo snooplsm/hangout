@@ -1,9 +1,12 @@
 package com.hangout;
 
+import java.util.List;
+
 import android.os.Bundle;
 import android.os.Message;
 import android.os.RemoteException;
 
+import com.hangout.api.Event;
 import com.hangout.service.ApiService;
 
 public class HomeActivity extends HangoutActivity {
@@ -13,6 +16,13 @@ public class HomeActivity extends HangoutActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);		
+		
+		try {
+			List<Event> events1 = getHangoutApplication().getEventDao().getEventsWithin24Hours(true);
+			List<Event> events2 = getHangoutApplication().getEventDao().getEventsWithin24Hours(false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 				
 	}
 

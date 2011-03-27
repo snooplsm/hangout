@@ -78,15 +78,14 @@ public class GroupDao extends Dao {
 			group.setName(cursor.getString(8));
 			group.setOrganizerId(cursor.getLong(9));
 			group.setOrganizerName(cursor.getString(10));
-			group.setOrganizerProfileURL(cursor.getString(11));
-			group.setRating(cursor.getDouble(12));
-			group.setShortLink(cursor.getString(13));
-			group.setCity(cursor.getString(14));
-			group.setState(cursor.getString(15));
-			group.setCountry(cursor.getString(16));
-			group.setZip(cursor.getString(17));
-			group.setVisibility(cursor.getString(18));
-			group.setWho(cursor.getString(19));
+			group.setRating(cursor.getDouble(11));
+			group.setShortLink(cursor.getString(12));
+			group.setCity(cursor.getString(13));
+			group.setState(cursor.getString(14));
+			group.setCountry(cursor.getString(15));
+			group.setZip(cursor.getString(16));
+			group.setVisibility(cursor.getString(17));
+			group.setWho(cursor.getString(18));
 			return group;
 		}
 		

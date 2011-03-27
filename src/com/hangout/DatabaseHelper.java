@@ -8,9 +8,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private static final int VERSION = 1;
 	
-	public DatabaseHelper(Context context, long memberId) {
-		super(context, "member_"+memberId+"_database.sqlite", null, VERSION);		
+	private long memberId;
+	
+	public DatabaseHelper(Context context, long memberId) {		
+		super(context, "member_"+memberId+"_database.sqlite", null, VERSION);
+		this.memberId = memberId;
 	}	
+		
+	public long getMemberId() {
+		return memberId;
+	}
 
 	@Override
 	public void onOpen(SQLiteDatabase db) {

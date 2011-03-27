@@ -27,6 +27,10 @@ public class SnapupActivity extends HangoutActivity {
 		
 		long currentMeetupMemberId = getHangoutApplication().getStorage().getMeetupCurrentMemberId();
 		if(currentMeetupMemberId!=0) {
+			if(getHangoutApplication().getMember()==null) {
+				getHangoutApplication().initializeMember(currentMeetupMemberId);
+				getHangoutApplication().setMember(getHangoutApplication().getMemberDao().get(currentMeetupMemberId));
+			}
 			Intent intent = new Intent(this, HomeActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_ANIMATION);
 			startActivity(intent);

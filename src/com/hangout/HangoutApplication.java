@@ -94,13 +94,29 @@ public class HangoutApplication extends Application {
 	public Member getMember() {
 		return member;
 	}
-
+	
+	public void initializeMember(long memberId) {
+		if(helper!=null && memberId!=helper.getMemberId()) { 
+			helper.close();
+			helper = new DatabaseHelper(this,memberId);
+		} else {
+			helper = new DatabaseHelper(this,memberId);
+		}
+		if(memberDao==null) {
+			memberDao = new MemberDao();
+		}
+		memberDao.setHelper(helper);
+	}
+	
 	public void setMember(Member member) {
 		this.member = member;
-		if(helper!=null) {
+		if(helper!=null && member.getId().equals(helper.getMemberId())) {
 			helper.close();
-		} 
-		helper = new DatabaseHelper(this, member.getId());
+			helper = new DatabaseHelper(this, member.getId());
+		} else {
+			helper = new DatabaseHelper(this, member.getId());
+		}
+		
 		if(memberDao==null) {
 			memberDao = new MemberDao();
 		}

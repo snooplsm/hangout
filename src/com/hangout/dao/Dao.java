@@ -29,7 +29,8 @@ public abstract class Dao {
 	}
 	
 	protected Cursor cursor(String sql, Object...vars) {
-		return helper.getWritableDatabase().rawQuery(String.format(sql,vars), null);
+		String newStr = String.format(sql,vars);
+		return helper.getWritableDatabase().rawQuery(newStr, null);
 	}
 	
 	protected void insert(String table, ContentValues cv) {

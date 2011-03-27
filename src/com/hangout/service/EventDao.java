@@ -1,5 +1,7 @@
 package com.hangout.service;
 
+import java.util.List;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,8 +15,10 @@ import com.hangout.dao.Dao;
 public class EventDao extends Dao {
 
 	//"create table event(id integer primary key, description text, event_url varchar(255), name varchar(255), rsvp_limit integer, status varchar(100), time integer, utc_offset integer, visibility varchar(50), yes_rsvp_count integer, venue_id integer, group_id integer, CONSTRAINT fk_venue_id FOREIGN KEY (venue_id) REFERENCES venue(id), CONSTRAINT fk_group_id FOREIGN KEY (group_id) REFERENCES mgroup(id))",
-	private static final String SELECT_EVENT = "select id, description, event_url, name, rsvp_limit, status, time, utc_offset, visibility, yes_rsvp_count, venue_id, group_id from event where id = '%s'";
-	private static final String WHERE = "id=%s";
+	private static final String SELECT_EVENT = "select id, description, event_url, name, rsvp_limit, status, time, utc_offset, visibility, yes_rsvp_count, venue_id, group_id from event where";
+	private static final String SELECT_24_EVENT = SELECT_EVENT + " datetime(time/1000,'unixepoch')<= datetime('now','+24 hours')";
+	private static final String SELECT_PAST_3_HOURS_TO_24 = SELECT_24_EVENT +" and datetime(time/1000,'unixepoch')>= datetime('now','-3 hours')";
+	private static final String WHERE = "id='%s'";
 	private static final String COUNT_EVENT = "select count(*) from event where id='%s'";
 	private static final String TABLE = "event";
 	
@@ -26,7 +30,6 @@ public class EventDao extends Dao {
 		this.groupDao = groupDao;
 		this.venueDao = venueDao;
 	}
-	//private VenueDao venueDao;
 	
 	private Parser<Event> eventParser = new Parser<Event>() {
 
@@ -101,6 +104,11 @@ public class EventDao extends Dao {
 		} finally {
 			db.endTransaction();
 		}
+	}
+	
+	public List<Event> getEventsWithin24Hours(boolean previousThreeHours) {
+		List<Event> events = all(cursor(previousThreeHours ? SELECT_PAST_3_HOURS_TO_24 : SELECT_24_EVENT),eventParser);
+		return events;
 	}
 	
 }
