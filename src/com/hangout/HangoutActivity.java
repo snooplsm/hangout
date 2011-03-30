@@ -5,6 +5,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -12,12 +14,15 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 
+import com.hangout.api.Checkins;
 import com.hangout.api.Events;
 import com.hangout.api.Groups;
 import com.hangout.api.Member;
 import com.hangout.service.ApiService;
 
 public class HangoutActivity extends Activity {
+	
+	private ConnectivityManager mConnectivityManager;
 
 	private ServiceConnection mConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className, IBinder service) {
@@ -66,6 +71,7 @@ public class HangoutActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		doBindService();
 	}
 	
@@ -85,6 +91,9 @@ public class HangoutActivity extends Activity {
 				break;
 			case ApiService.MSG_API_RECEIVED_EVENTS:
 				onGetEvents((Events)msg.obj);
+				break;
+			case ApiService.MSG_API_RECEIVED_CHECKINS_FOR_EVENT:
+				onGetCheckins((Checkins)msg.obj);
 				break;
 			default:
 				HangoutActivity.this.handleMessage(msg);
@@ -111,11 +120,15 @@ public class HangoutActivity extends Activity {
 		}
 	}
 	
-	private void onGetEvents(Events events) {
+	protected void onGetCheckins(Checkins checkins) {
+		getHangoutApplication().getCheckinDao().save(checkins);
+	}
+	
+	protected void onGetEvents(Events events) {
 		getHangoutApplication().getEventDao().save(events);
 	}
 	
-	private void onGetGroups(Groups groups) {
+	protected void onGetGroups(Groups groups) {
 		getHangoutApplication().getGroupDao().save(groups);		
 		
 	}
@@ -133,6 +146,14 @@ public class HangoutActivity extends Activity {
 	protected void onServiceConnected() {
 		
 	}
+	
+	protected final boolean hasInternet() {
+		NetworkInfo info = mConnectivityManager.getActiveNetworkInfo();
+		if(info==null) { return false; }
+		return info.isConnected();
+	}
+	
+	
 	
 	final Messenger mMessenger = new Messenger(new IncomingHandler());
 }

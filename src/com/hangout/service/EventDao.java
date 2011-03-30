@@ -18,6 +18,7 @@ public class EventDao extends Dao {
 	private static final String SELECT_EVENT = "select id, description, event_url, name, rsvp_limit, status, time, utc_offset, visibility, yes_rsvp_count, venue_id, group_id from event where";
 	private static final String SELECT_24_EVENT = SELECT_EVENT + " datetime(time/1000,'unixepoch')<= datetime('now','+24 hours')";
 	private static final String SELECT_PAST_3_HOURS_TO_24 = SELECT_24_EVENT +" and datetime(time/1000,'unixepoch')>= datetime('now','-3 hours')";
+	private static final String ORDER_TIME = " order by time asc";
 	private static final String WHERE = "id='%s'";
 	private static final String COUNT_EVENT = "select count(*) from event where id='%s'";
 	private static final String TABLE = "event";
@@ -107,7 +108,7 @@ public class EventDao extends Dao {
 	}
 	
 	public List<Event> getEventsWithin24Hours(boolean previousThreeHours) {
-		List<Event> events = all(cursor(previousThreeHours ? SELECT_PAST_3_HOURS_TO_24 : SELECT_24_EVENT),eventParser);
+		List<Event> events = all(cursor(previousThreeHours ? SELECT_PAST_3_HOURS_TO_24 + ORDER_TIME : SELECT_24_EVENT + ORDER_TIME),eventParser);
 		return events;
 	}
 	

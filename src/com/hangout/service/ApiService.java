@@ -13,6 +13,7 @@ import android.os.RemoteException;
 
 import com.hangout.HangoutApplication;
 import com.hangout.Storage;
+import com.hangout.api.Checkins;
 import com.hangout.api.Events;
 import com.hangout.api.Groups;
 import com.hangout.api.Member;
@@ -48,7 +49,11 @@ public class ApiService extends Service {
 
 	public static final int MSG_API_GET_EVENTS = 11;
 
-	public static final int MSG_API_RECEIVED_EVENTS = 11;
+	public static final int MSG_API_RECEIVED_EVENTS = 12;
+	
+	public static final int MSG_API_GET_CHECKINS_FOR_EVENT = 13;
+	
+	public static final int MSG_API_RECEIVED_CHECKINS_FOR_EVENT = 14;
 
 	ArrayList<Messenger> mClients = new ArrayList<Messenger>();
 
@@ -149,6 +154,28 @@ public class ApiService extends Service {
 
 				break;
 			}
+			case MSG_API_GET_CHECKINS_FOR_EVENT: {
+				final String eventId = (String) msg.obj;
+				new Thread() {
+					@Override
+					public void run() {
+						try {
+							Checkins checkins = getHangoutApplication().getApi().getCheckins(eventId);
+							ApiService.this.sendMessage(
+									MSG_API_RECEIVED_CHECKINS_FOR_EVENT, checkins);
+						} catch (IOException e) {
+							ApiService.this.sendMessage(MSG_API_IO_EXCEPTION,
+									MSG_API_GET_CHECKINS_FOR_EVENT);
+						} catch (TokenExpiredException e) {
+							ApiService.this.sendMessage(
+									MSG_API_NEED_AUTHENTICATION, null);
+						}
+					}
+				}.start();
+
+				break;
+			}
+			
 			case MSG_API_MEETUP_TOKEN_CHANGED:
 				Storage storage = getHangoutApplication().getStorage();
 				getHangoutApplication().getConsumer().setTokenWithSecret(

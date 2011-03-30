@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.os.RemoteException;
 
+import com.hangout.api.Member;
 import com.hangout.service.ApiService;
 
 public class SnapupActivity extends HangoutActivity {
@@ -105,7 +106,9 @@ public class SnapupActivity extends HangoutActivity {
 				protected Void doInBackground(String... params) {
 					try {
 						getHangoutApplication().getProvider().retrieveAccessToken(getHangoutApplication().getConsumer(), params[0]);
-						
+						Member member = getHangoutApplication().getApi().getSelf();
+						getHangoutApplication().getStorage().setMeetupCurrentMemberId(member.getId());
+						getHangoutApplication().setMember(member);
 					} catch (Exception e) {
 
 					}

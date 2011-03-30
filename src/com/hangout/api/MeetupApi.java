@@ -33,7 +33,15 @@ public abstract class MeetupApi {
 
 	private static final String EVENTS = "https://api.meetup.com/2/events?member_id=%s&text_format=plain";
 	
+	private static final String CHECKINS = "https://api.meetup.com/2/checkins?event_id=%s";
+	
+	private static final String PHOTOS = "https://api.meetup.com/2/photos?event_id=%s";
+	
 	private HttpClient client;
+	
+	private int rateLimitRemaining = 200;
+	
+	private long rateLimitReset = System.currentTimeMillis()/1000+3600;
 	
 	public MeetupApi() {
 		this(null);
@@ -67,6 +75,14 @@ public abstract class MeetupApi {
 		return decode(execute(sign(get(GROUPS,memberId))),Groups.class);
 	}
 	
+	public Checkins getCheckins(String eventId) throws IOException, TokenExpiredException {
+		return decode(execute(sign(get(CHECKINS,eventId))), Checkins.class);
+	}
+	
+	public Photos getPhotos(String eventId) throws IOException, TokenExpiredException {
+		return decode(execute(sign(get(PHOTOS,eventId))), Photos.class);
+	}
+	
 	public Events getUpcommingEvents(long memberId) throws IOException, TokenExpiredException {
 		return decode(execute(sign(get(EVENTS,memberId))),Events.class);
 	}
@@ -87,6 +103,12 @@ public abstract class MeetupApi {
 	private <T> T decode(HttpResponse response, Class<T> clazz) throws TokenExpiredException {
 		if(response.getStatusLine().getStatusCode()==401) {
 			throw new TokenExpiredException();
+		}
+		if(response.containsHeader("X-RateLimit-Remaining")) {
+			rateLimitRemaining = Integer.parseInt(response.getFirstHeader("X-RateLimit-Remaining").getValue());			
+		}
+		if(response.containsHeader("X-RateLimit-Reset")) {
+			rateLimitReset = Long.parseLong(response.getFirstHeader("X-RateLimit-Reset").getValue());
 		}
 		try {						
 			T t = mapper.readValue(response.getEntity().getContent(),clazz);

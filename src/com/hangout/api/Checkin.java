@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class Checkin implements Serializable {
+public class Checkin extends CheckinL implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

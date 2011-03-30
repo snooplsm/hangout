@@ -9,6 +9,7 @@ import android.app.Application;
 
 import com.hangout.api.MeetupApi;
 import com.hangout.api.Member;
+import com.hangout.service.CheckinDao;
 import com.hangout.service.EventDao;
 import com.hangout.service.GroupDao;
 import com.hangout.service.MemberDao;
@@ -35,6 +36,8 @@ public class HangoutApplication extends Application {
 	private VenueDao venueDao;
 	
 	private EventDao eventDao;
+	
+	private CheckinDao checkinDao;
 
 	@Override
 	public void onCreate() {
@@ -110,7 +113,7 @@ public class HangoutApplication extends Application {
 	
 	public void setMember(Member member) {
 		this.member = member;
-		if(helper!=null && member.getId().equals(helper.getMemberId())) {
+		if(helper!=null && Long.valueOf(member.getId()).equals(helper.getMemberId())) {
 			helper.close();
 			helper = new DatabaseHelper(this, member.getId());
 		} else {
@@ -129,10 +132,14 @@ public class HangoutApplication extends Application {
 		if(eventDao==null) {
 			eventDao = new EventDao(groupDao,venueDao);
 		}		
+		if(checkinDao==null) {
+			checkinDao = new CheckinDao();
+		}
 		memberDao.setHelper(helper);
 		groupDao.setHelper(helper);
 		venueDao.setHelper(helper);
 		eventDao.setHelper(helper);
+		checkinDao.setHelper(helper);
 	}
 
 	public MemberDao getMemberDao() {
@@ -149,6 +156,10 @@ public class HangoutApplication extends Application {
 
 	public EventDao getEventDao() {
 		return eventDao;
+	}
+
+	public CheckinDao getCheckinDao() {
+		return checkinDao;
 	}
 	
 	
