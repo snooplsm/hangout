@@ -109,6 +109,7 @@ public class SnapupActivity extends HangoutActivity {
 						Member member = getHangoutApplication().getApi().getSelf();
 						getHangoutApplication().getStorage().setMeetupCurrentMemberId(member.getId());
 						getHangoutApplication().setMember(member);
+						getHangoutApplication().getMemberDao().save(member);
 					} catch (Exception e) {
 
 					}
@@ -121,7 +122,7 @@ public class SnapupActivity extends HangoutActivity {
 					Storage storage = getHangoutApplication().getStorage();
 					OAuthConsumer consumer = getHangoutApplication().getConsumer();
 					storage.saveMeetupToken(consumer.getToken());
-					storage.saveMeetupToken(consumer.getTokenSecret());				
+					storage.saveMeetupTokenSecret(consumer.getTokenSecret());				
 					Message message = Message.obtain(null, ApiService.MSG_API_NEED_AUTHENTICATION);
 					try {
 						mService.send(message);

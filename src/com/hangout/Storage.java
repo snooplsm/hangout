@@ -12,6 +12,7 @@ public class Storage {
 	private static final String MEETUP_TOKEN_SECRET="meetup-token-secret";
 	private static final String MEETUP_VERIFIER="meetup-verifier";
 	private static final String MEETUP_CURRENT_MEMBER_ID = "meetup-current-memeber-id";
+	private static final String MEETUP_EVENT_SYNC = "meetup-event-sync-%s";
 	
 	public Storage(Context ctx) {
 		super();
@@ -48,6 +49,14 @@ public class Storage {
 	
 	public void setMeetupCurrentMemberId(long memberId) {
 		save(MEETUP_CURRENT_MEMBER_ID,memberId);
+	}
+	
+	public void saveMeetupEventSync(long memberId, long time) {
+		save(String.format(MEETUP_EVENT_SYNC,memberId),time);
+	}
+	
+	public long getMeetupEventSync(long memberId) {
+		return getLong(String.format(MEETUP_EVENT_SYNC,memberId));
 	}
 	
 	private void save(String key, String value) {

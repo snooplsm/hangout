@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.hangout.api.Checkin;
 import com.hangout.api.Checkins;
 import com.hangout.api.Event;
+import com.hangout.api.Events;
+import com.hangout.api.Member;
 import com.hangout.service.ApiService;
 
 public class HomeActivity extends HangoutActivity {
@@ -23,6 +25,8 @@ public class HomeActivity extends HangoutActivity {
 	
 	private Long lastCheckinsRefresh;
 	
+	private Long lastEventsRefresh;
+	
 	private static final int THREE_HOURS_AS_MILLIS = 10800000;
 	
 	private TextView groupName;
@@ -31,9 +35,7 @@ public class HomeActivity extends HangoutActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);		
-		 
-		events = getHangoutApplication().getEventDao().getEventsWithin24Hours(true);
+		super.onCreate(savedInstanceState);				 		
 		
 		setContentView(R.layout.home);
 		
@@ -46,14 +48,32 @@ public class HomeActivity extends HangoutActivity {
 		super.onResume();
 		
 		if(currentEvent==null) {
-			if(events!=null && findCurrentEventAndSet()) {
-				onCurrentEvent();
+			if(events==null) {
+				events = getHangoutApplication().getEventDao().getEventsWithin24Hours(true);
+			}
+			if(events!=null) {
+				if(findCurrentEventAndSet()) {
+					onCurrentEvent();
+				}
 			}
 		} else {
 			onCurrentEvent();
 		}		
+		
 	}
 	
+	private void fetchEventsIfNecessary() {
+		if(lastEventsRefresh==null) {
+			Message msg = Message.obtain();
+			msg.what = ApiService.MSG_API_GET_EVENTS;
+			msg.obj = getHangoutApplication().getMember().getId();
+			try {
+				mService.send(msg);
+			} catch (RemoteException e) {
+			}
+		}
+	}
+
 	private void fetchCheckins() {
 		if(currentEvent==null) return;
 		if(lastCheckinsRefresh!=null) {
@@ -135,14 +155,32 @@ public class HomeActivity extends HangoutActivity {
 				//TODO: handle or ignore
 				throw new RuntimeException(e);
 			}					
+		} else {
+			fetchEventsIfNecessary();
+			fetchCheckins();
 		}
-		fetchCheckins();
+		
 	}
 
 	@Override
 	protected void onGetCheckins(Checkins checkins) {
 		super.onGetCheckins(checkins);
 		lastCheckinsRefresh = System.currentTimeMillis();
+	}
+	
+	@Override
+	protected void onGetSelf(Member member) {	
+		super.onGetSelf(member);
+		fetchEventsIfNecessary();
+	}
+	
+	@Override
+	protected void onGetEvents(Events events) {	
+		super.onGetEvents(events);
+		this.events = getHangoutApplication().getEventDao().getEventsWithin24Hours(true);			
+		if(this.events!=null) {
+			findCurrentEventAndSet();
+		}
 	}
 	
 	

@@ -106,7 +106,7 @@ public class HangoutActivity extends Activity {
 		
 	}
 	
-	private void onGetSelf(Member member) {
+	protected void onGetSelf(Member member) {
 		getHangoutApplication().setMember(member);
 		getHangoutApplication().getStorage().setMeetupCurrentMemberId(member.getId());
 		getHangoutApplication().getMemberDao().save(member);
